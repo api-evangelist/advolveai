@@ -1,8 +1,13 @@
 aid: advolveai
 name: Advolve.AI
-description: 'Advolve.AI is a company surfaced as a portfolio company of prosus-ventures and added to
-  the API Evangelist network as a stub for enrichment. Sector: ai. This profile is a lead awaiting the
-  enrichment pipeline.'
+description: 'Advolve.AI is an AI-driven performance-marketing and customer-acquisition platform for
+  e-commerce brands and marketplaces, offering an end-to-end solution to automate, scale, and optimize
+  paid media and digital advertising, including a patent-pending creative-optimization capability that
+  tunes interactive ad elements (messaging, graphics, colors, fonts). Founded in 2023 and headquartered
+  in Sao Paulo, Brazil, Advolve was backed by Prosus Ventures and Valor Capital and was acquired by
+  iFood (Prosus group) in November 2025 to power iFood Ads across Latin America. Advolve publishes a
+  marketing website only; as of enrichment it exposes no public developer program, API, SDKs, or
+  documentation surface.'
 url: https://raw.githubusercontent.com/api-evangelist/advolveai/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,12 +15,31 @@ x-backed-by:
 - prosus-ventures
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: unknown
+  trial: false
+  try_now: false
+  public: false
+  label: Unknown
+  confidence: low
+  source: []
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
 modified: '2026-07-17'
+image: https://advolve.ai/images/og-image.png
 tags:
 - Company
-- Ai
+- AI
+- Advertising
+- Marketing
+- AdTech
+- MarTech
+- Performance Marketing
+- E-commerce
+- Brazil
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -23,5 +47,14 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: DomainSecurity
+  url: security/advolveai-domain-security.yml
 - type: Website
   url: https://advolve.ai
+- type: LinkedIn
+  url: https://www.linkedin.com/company/advolve-ai
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence
