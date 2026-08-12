@@ -1,0 +1,167 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  live GET of /.well-known/*, /llms.txt and the contract-discovery paths on every Advolve host
+  reachable from apis.yml, the sitemap, the production SPA bundle and DNS
+summary: >-
+  Advolve publishes no /.well-known/ discovery surface, no llms.txt and no machine-readable
+  contract on any host. advolve.ai is a five-route React single-page app served from Cloudflare
+  that answers HTTP 200 with the SAME 984-byte HTML shell for EVERY path — including
+  /.well-known/security.txt, /.well-known/agent-card.json, /openapi.json and /llms.txt. Those
+  200s are soft 404s, not documents: byte-identical shells with `<div id="root"></div>` and no
+  payload. They are recorded here as MISSES and NO WellKnown, SecurityTxt, AgentCard or LLMsTxt
+  pointer is wired in apis.yml — a 200 that returns an SPA shell is an absence, and a pointer
+  would assert a surface the provider does not serve. The only non-marketing host,
+  app.advolve.ai, is the customer application behind Cloudflare Access and 302s every path to
+  advolve.cloudflareaccess.com. No api./docs./developer./portal./console. subdomain resolves.
+hosts:
+- host: https://advolve.ai
+  note: >-
+    Vite/React SPA on Cloudflare. Every path returns 200 with an identical 984-byte HTML shell —
+    a catch-all, not a document. POST is rejected with 405, so there is no GraphQL or MCP
+    surface here either.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/openid-configuration
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/api-catalog
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /.well-known/agent-card.json
+    status: 200
+    result: miss
+    note: >-
+      984-byte SPA shell, text/html — the dominant A2A false positive. Body is not a JSON object
+      and carries none of name/url/version/protocolVersion/capabilities/skills. NO agent card
+      written, no AgentCard pointer.
+  - path: /.well-known/agent.json
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — legacy pre-0.3 path, same catch-all
+  - path: /llms.txt
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /openapi.json
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /openapi.yaml
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /swagger.json
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /api-docs
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /docs
+    status: 200
+    result: miss
+    note: 984-byte SPA shell, text/html — soft 404
+  - path: /graphql
+    status: 405
+    result: miss
+    note: POST of the standard introspection query rejected — static host, no GraphQL surface
+  - path: /mcp
+    status: 405
+    result: miss
+    note: POST of {"jsonrpc":"2.0","method":"tools/list"} rejected — no MCP surface
+  - path: /robots.txt
+    status: 200
+    result: hit
+    note: >-
+      35 bytes, real document — "User-agent: *" then "Disallow: /privacy"
+  - path: /sitemap.xml
+    status: 200
+    result: hit
+    note: >-
+      Real XML sitemap, 5 URLs total (/, /careers, /news, /contact, /privacy), every entry
+      lastmod 2025-02-14. No developer, docs, API or pricing route exists on the site.
+- host: https://app.advolve.ai
+  note: >-
+    The customer application, protected by Cloudflare Access. Every path 302s to
+    advolve.cloudflareaccess.com/cdn-cgi/access/login/app.advolve.ai and the response carries
+    `www-authenticate: Cloudflare-Access`. This is the product console, not a documented API;
+    nothing behind it is reachable without credentials and no probe was attempted past the gate.
+  documents:
+  - path: /.well-known/security.txt
+    status: 302
+    result: gated
+  - path: /.well-known/oauth-authorization-server
+    status: 302
+    result: gated
+  - path: /.well-known/oauth-protected-resource
+    status: 302
+    result: gated
+  - path: /.well-known/agent-card.json
+    status: 302
+    result: gated
+  - path: /openapi.json
+    status: 302
+    result: gated
+  - path: /graphql
+    status: 302
+    result: gated
+findings:
+- id: spa-soft-200-catch-all
+  severity: medium
+  detail: >-
+    advolve.ai returns HTTP 200 for every path that does not exist, serving the same 984-byte
+    SPA shell. Any probe that trusts a status code alone would record a security.txt, an agent
+    card, an llms.txt and an OpenAPI that do not exist. Every /.well-known/ entry above is
+    therefore graded on the BODY, and all are misses.
+  evidence:
+  - url: https://advolve.ai/.well-known/agent-card.json
+    status: 200
+    finding: text/html, 984 bytes, byte-identical to the homepage shell
+  - url: https://advolve.ai/openapi.json
+    status: 200
+    finding: text/html, 984 bytes, byte-identical to the homepage shell
+- id: contact-api-host-nxdomain
+  severity: low
+  detail: >-
+    The production SPA bundle (/assets/index-D5QRx9mZ.js) posts the site contact form to
+    https://landing-page-api.advolve.ai/contacts. That hostname does not resolve — NXDOMAIN at
+    1.1.1.1 and 8.8.8.8 — so the only Advolve-operated HTTP API referenced anywhere in public
+    code is dead, and the marketing site's contact form is broken as shipped. This is the sole
+    API host name Advolve exposes publicly, and it is a first-party form backend, not a product
+    API.
+  evidence:
+  - url: https://landing-page-api.advolve.ai/contacts
+    status: 0
+    finding: NXDOMAIN — could not resolve host (verified against 1.1.1.1 and 8.8.8.8)
+- id: no-developer-subdomains
+  severity: low
+  detail: >-
+    api., docs., developer., developers., portal., dashboard., platform., admin., console. and
+    studio..advolve.ai all return NXDOMAIN. app.advolve.ai is the only subdomain that resolves,
+    and it is Cloudflare Access-protected.
+  evidence:
+  - url: https://api.advolve.ai/
+    status: 0
+    finding: NXDOMAIN
+  - url: https://app.advolve.ai/
+    status: 302
+    finding: redirects to advolve.cloudflareaccess.com; www-authenticate = Cloudflare-Access

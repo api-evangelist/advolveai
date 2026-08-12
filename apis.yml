@@ -28,7 +28,7 @@ accessModel:
   method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-08-12'
 image: https://advolve.ai/images/og-image.png
 tags:
 - Company
@@ -53,8 +53,42 @@ common:
   url: https://advolve.ai
 - type: LinkedIn
   url: https://www.linkedin.com/company/advolve-ai
+- type: GitHubOrganization
+  url: https://github.com/advolve
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-12'
+  status: minimal
+  artifacts_added: 2
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
+  note: >-
+    Full STEP 0b contract discovery run and missed on every host. advolve.ai is a five-route
+    React SPA that answers 200 with the same 984-byte shell for every path (soft 404s, graded on
+    body and recorded as misses); app.advolve.ai 302s to Cloudflare Access; no api./docs./
+    developer. subdomain resolves; the one API host named in the production bundle,
+    landing-page-api.advolve.ai, is NXDOMAIN. github.com/advolve is a domain-verified Advolve
+    org but holds only three FORKS of third-party projects (advolve-vtex, fastapi_mcp,
+    meta-ads-mcp) — evidence Advolve CONSUMES APIs and MCP, not that it publishes any. No
+    packages on npm/PyPI/RubyGems/crates.io. No llms.txt was generated: the provider's own
+    /llms.txt is a soft-404 shell and authoring one here would credit an agent surface they do
+    not serve.
+x-coverage:
+  state: none
+  reason: no-developer-program
+  detail: >-
+    Advolve sells an AI-run performance-marketing service through a five-page marketing SPA and
+    a Cloudflare Access-protected customer console at app.advolve.ai — there is no developer
+    portal, no API reference, no SDK and no public API host, and the only Advolve API hostname
+    published anywhere (landing-page-api.advolve.ai, the site's own contact-form backend) no
+    longer resolves.
+  evidence:
+  - url: https://advolve.ai/openapi.json
+    status: 200
+  - url: https://advolve.ai/.well-known/agent-card.json
+    status: 200
+  - url: https://advolve.ai/sitemap.xml
+    status: 200
+  - url: https://app.advolve.ai/
+    status: 302
+  - url: https://landing-page-api.advolve.ai/contacts
+    status: 0
+  checked: '2026-08-12'

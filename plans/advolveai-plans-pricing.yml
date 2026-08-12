@@ -1,0 +1,32 @@
+generated: '2026-08-12'
+method: searched
+source: https://advolve.ai/sitemap.xml
+plan_count: 0
+currency: null
+plans: []
+note: >-
+  Advolve publishes no pricing page, no plans and no tiers of any kind. Its own sitemap
+  enumerates the entire site — five routes: /, /careers, /news, /contact, /privacy — with no
+  /pricing or /plans route, and the site is a client-rendered SPA whose only commercial call to
+  action is the contact form. The commercial motion is enterprise/agency sales: Advolve sells an
+  AI-run performance-marketing service to e-commerce brands and marketplaces, priced per
+  engagement, and since the November 2025 acquisition by iFood (Prosus) the technology is being
+  folded into iFood Ads rather than sold as a self-serve product. plan_count is 0 because
+  nothing is published; NO Plans pointer is wired in apis.yml, since this file documents an
+  absence and a pointer would assert the provider publishes a pricing surface they do not.
+x-evidence:
+- url: https://advolve.ai/sitemap.xml
+  status: 200
+  finding: >-
+    5 URLs, all lastmod 2025-02-14 — /, /careers, /news, /contact, /privacy. No pricing or plans
+    route exists.
+- url: https://advolve.ai/
+  status: 200
+  finding: >-
+    React SPA shell; served HTML carries no price, tier, quota or plan language. Contact form
+    only.
+- url: https://app.advolve.ai/
+  status: 302
+  finding: >-
+    Customer application behind Cloudflare Access — no public sign-up, trial or self-serve
+    checkout to read a plan from.
