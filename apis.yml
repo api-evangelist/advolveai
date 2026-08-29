@@ -9,6 +9,8 @@ description: 'Advolve.AI is an AI-driven performance-marketing and customer-acqu
   marketing website only; as of enrichment it exposes no public developer program, API, SDKs, or
   documentation surface.'
 url: https://raw.githubusercontent.com/api-evangelist/advolveai/refs/heads/main/apis.yml
+x-api-posture: no-product-api
+x-api-posture-basis: observed
 x-type: company
 x-source: vc-portfolio
 x-backed-by:
